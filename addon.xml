@@ -12,7 +12,7 @@
              library="autostart.py" />
     <extension point="xbmc.addon.metadata">
         <language>en</language>
-        <platform>linux</platform>
+        <platform>all</platform>
         <summary>Raspbmc Settings</summary>
         <description>Raspbmc Settings</description>
     </extension>
