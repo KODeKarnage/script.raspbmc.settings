@@ -51,6 +51,9 @@ def set_switch(sys_dict,DISTRO):
     RESTART_ACTION = False
     RESTART_MESSAGE = []
     if "sys.upgrade" in sys_dict:
+        import xbmcgui
+        window = xbmcgui.Window(10000)
+        _servicerunning = window.getProperty('RUNS_Running')
         if sys_dict["sys.upgrade"] == "0":
             if os.path.isfile(AUTO_UPGRADE_FILE):
                 os.remove(AUTO_UPGRADE_FILE)
@@ -58,7 +61,8 @@ def set_switch(sys_dict,DISTRO):
                     xbmc.executebuiltin('XBMC.Notification("'+DISTRO+" updates are enabled"+'",,2000,"'+'")')
                 except:
                     syslog.syslog(DISTRO+" updates are enabled")
-
+            if _servicerunning == 'true':
+                window.setProperty('RUNS_stopnow', 'true')
         else:
             if not os.path.isfile(AUTO_UPGRADE_FILE):
                 f=open(AUTO_UPGRADE_FILE,'w')
@@ -67,6 +71,13 @@ def set_switch(sys_dict,DISTRO):
                     xbmc.executebuiltin('XBMC.Notification("'+DISTRO+" updates are disabled"+'",,2000,"'+'")')
                 except:
                     syslog.syslog(DISTRO+" updates are disabled")
+
+            if sys_dict["sys.upgrade"] == "1" and _servicerunning == 'true':
+                window.setProperty('RUNS_stopnow', 'true')
+            if sys_dict["sys.upgrade"] == "2" and _servicerunning != 'true':
+                import xbmcaddon
+                import os
+                xbmc.executescript(os.path.join(xbmcaddon.Addon("script.raspbmc.settings").getAddonInfo('path'),'resources','lib','update_notify.py'))
 
     if "remote.filter" in sys_dict:
         if sys_dict["remote.filter"]== "false":

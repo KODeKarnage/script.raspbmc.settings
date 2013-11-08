@@ -30,34 +30,45 @@ import datetime
 class RaspBMC_Update_Notification_Service():
 
     def __init__(self):
-        xbmc.sleep(60000)
-
-        self.__script_id__  = "script.raspbmc.settings"
-        self.__addon__      = xbmcaddon.Addon(id=self.__script_id__)
-        self.__scriptPath__ = self.__addon__.getAddonInfo('path')
-        self.__image_file__ = os.path.join(self.__scriptPath__,'resources','media','RaspBMC_UA.png')
-        self.__addon__.setSetting(id='Update_Available',value='false')
-
         self.window = xbmcgui.Window(10000)
         self.window.setProperty('RUA_notification','false')
 
-        self.ex_version_sources =   [   "http://svn.stmlabs.com/svn/raspbmc/release/update-system/kernel/kver", 
-                                        "http://svn.stmlabs.com/svn/raspbmc/release/update-system/xbmc-svcmgmt/svcver",
-                                        "http://svn.stmlabs.com/svn/raspbmc/release/update-system/xbmc/xbmcver" ]
-        self.in_version_sources =   [   "/scripts/upd_hist/kver",
-                                        "/scripts/upd_hist/svcver",
-                                        "/scripts/upd_hist/xbmcver" ] 
+        try:
+            self.already_running = self.window.getProperty('RUNS_Running')
+        except:
+            self.already_running = 'false'
 
-        self.base_time    = datetime.datetime.now()
-        self.recheck_time = datetime.datetime.now()
-        self.first_run    = True
+        if self.already_running != 'true':
 
-        self.check_ver()
-        self._daemon()
+            self.window.setProperty('RUNS_Running','true')
+            self.window.setProperty('RUNS_stopnow','false')
+
+            xbmc.sleep(30000)
+
+            self.__script_id__  = "script.raspbmc.settings"
+            self.__addon__      = xbmcaddon.Addon(id=self.__script_id__)
+            self.__scriptPath__ = self.__addon__.getAddonInfo('path')
+            self.__image_file__ = os.path.join(self.__scriptPath__,'resources','media','RaspBMC_UA.png')
+            self.__addon__.setSetting(id='Update_Available',value='false')
+
+            self.ex_version_sources =   [   "http://svn.stmlabs.com/svn/raspbmc/release/update-system/kernel/kver", 
+                                            "http://svn.stmlabs.com/svn/raspbmc/release/update-system/xbmc-svcmgmt/svcver",
+                                            "http://svn.stmlabs.com/svn/raspbmc/release/update-system/xbmc/xbmcver" ]
+            self.in_version_sources =   [   "/scripts/upd_hist/kver",
+                                            "/scripts/upd_hist/svcver",
+                                            "/scripts/upd_hist/xbmcver" ] 
+
+            self.base_time    = datetime.datetime.now()
+            self.recheck_time = datetime.datetime.now()
+            self.first_run    = True
+
+            self.check_ver()
+            self._daemon()
 
     def log(self, label, message):
         #if settings['debug']:
         xbmc.log(msg='RaspBMC_Notify: ' + str(label) + ' - ' + str(message))
+
 
     def _daemon(self):
         while not xbmc.abortRequested:
@@ -73,8 +84,14 @@ class RaspBMC_Update_Notification_Service():
                 
                 available = self.__addon__.getSetting('Update_Available')
                 notified = self.window.getProperty('RUA_notification')
+
                 self.log('available',available)
                 self.log('notified',notified)
+                
+                #checks if the service has been asked to stop
+                _stopservice = self.window.getProperty('RUNS_stopnow')
+                if _stopservice == 'true':
+                    break
 
                 if available == 'true' and notified == 'false':
                     #posts notification if update is available and notification is not currently displayed
@@ -85,7 +102,9 @@ class RaspBMC_Update_Notification_Service():
                 else:
                     self.check_ver()
             xbmc.sleep(2500)    
+
         self.takedown_notification()
+        self.window.setProperty('RUNS_Running','false')
 
 
     def check_ver(self):
@@ -122,5 +141,5 @@ class RaspBMC_Update_Notification_Service():
 
 
 if __name__ == "__main__":
-    srv = RaspBMC_Update_Notify()
+    srv = RaspBMC_Update_Notification_Service()
     del srv

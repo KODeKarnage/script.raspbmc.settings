@@ -48,7 +48,7 @@
     <string id="30208">MAC address for Wake on LAN</string>
     <string id="30250">Always</string>
     <string id="30251">Never</string>
-    <string id="30252">Notify</string>
+    <string id="30252">Notify only</string>
     <string id="30300">MPEG2 codec license</string>
     <string id="30301">VC1 codec key</string>
     <string id="30302">DTS codec key</string>
