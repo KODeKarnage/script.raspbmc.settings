@@ -1,0 +1,10 @@
+CHANGELOG:
+Changed label in Settings from "Keep RaspBMC Updated" to "Update RaspBMC on Reboot"
+Options in Settings now "Always (Notify)"(default), "Never", or "Notify Only"
+'Always (Notify)" is auto-update on reboot (with notification, as I figured no-one would want to be surprised by the update)
+'Never' is never auto-update
+'Notify Only' is never auto-update, but let me know when a new version is available
+Added update_notify.py to resources/lib, containing the update notification service class
+Added service to autostart.py (autostart will now continue to run instead of dying)
+changed switches.py to launch or kill service without needing restart
+bumped version number

@@ -51,9 +51,11 @@
      <setting id="sys.password" type="text"  option="hidden" default="" label="30200" /> 
      <setting id="sys.password_confirm" type="text" option="hidden" default="" label="30201" /> 
      <setting type="action" option="close" label="30202" action="RunScript($ID,password)" />
+     
      <setting label="31101" type="lsep" />
      <setting id="sys.upgrade" type="enum" lvalues="30250|30251|30252" default="0" label="30203"/>
-     
+     <setting id="update_next_reboot" type="bool" default="false" label="30253" visible="gt(-1,0)"/>
+
     <setting type="sep" />
      <setting id="sys.xbmc.res" type="bool" default="false" label="30204"/>
      <!--<setting id="sys.xbmc.ae" type="bool" default="false" label="30205"/>-->
