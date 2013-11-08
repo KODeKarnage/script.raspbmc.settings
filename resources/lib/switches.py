@@ -51,36 +51,32 @@ def set_switch(sys_dict,DISTRO):
     RESTART_ACTION = False
     RESTART_MESSAGE = []
     if "sys.upgrade" in sys_dict:
-        import xbmcgui
-        window = xbmcgui.Window(10000)
-        _servicerunning = window.getProperty('RUNS_Running')
-        if sys_dict["sys.upgrade"] == "0":
+        if sys_dict["sys.upgrade"] == "true":
             if os.path.isfile(AUTO_UPGRADE_FILE):
                 os.remove(AUTO_UPGRADE_FILE)
                 try:
                     xbmc.executebuiltin('XBMC.Notification("'+DISTRO+" updates are enabled"+'",,2000,"'+'")')
                 except:
                     syslog.syslog(DISTRO+" updates are enabled")
-            if _servicerunning != 'true':
-                import xbmcaddon
-                import os
-                xbmc.executescript(os.path.join(xbmcaddon.Addon("script.raspbmc.settings").getAddonInfo('path'),'resources','lib','update_notify.py'))
         else:
             if not os.path.isfile(AUTO_UPGRADE_FILE):
                 f=open(AUTO_UPGRADE_FILE,'w')
                 f.close()
                 try:
-                    xbmc.executebuiltin('XBMC.Notification("'+DISTRO+" updates are disabled"+'",,2000,"'+'")')
+                    xbmc.executebuiltin('XBMC.Notification("'+DISTRO+" auto-updates are disabled"+'",,2000,"'+'")')
                 except:
-                    syslog.syslog(DISTRO+" updates are disabled")
+                    syslog.syslog(DISTRO+" auto-updates are disabled")
 
-            if sys_dict["sys.upgrade"] == "1" and _servicerunning == 'true':
-                window.setProperty('RUNS_stopnow', 'true')
-                
-            if sys_dict["sys.upgrade"] == "2" and _servicerunning != 'true':
-                import xbmcaddon
-                import os
-                xbmc.executescript(os.path.join(xbmcaddon.Addon("script.raspbmc.settings").getAddonInfo('path'),'resources','lib','update_notify.py'))
+    if "sys.notification" in sys_dict:
+        if sys_dict["sys.notification"] == "true":
+            import xbmcaddon
+            import os
+            xbmc.executescript(os.path.join(xbmcaddon.Addon("script.raspbmc.settings").getAddonInfo('path'),'resources','lib','update_notify.py'))
+        else:
+            import xbmcgui
+            window = xbmcgui.window(10000)
+            window.setProperty('RUNS_stopnow','true')
+
 
     if "remote.filter" in sys_dict:
         if sys_dict["remote.filter"]== "false":

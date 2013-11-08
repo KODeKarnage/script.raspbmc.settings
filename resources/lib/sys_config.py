@@ -35,7 +35,7 @@ def load_settings(__settings__,DISTRO):
             exec "dict_nm[\"%s\"]=__settings__.getSetting(\"%s\")" % (key,key)
         for key in ("sys.service.ftp","sys.service.ssh","sys.service.samba","sys.service.remote","sys.service.cron","sys.service.tvh", "sys.service.boblight", "sys.service.surveil", "sys.service.vnc", "sys.service.sab", "sys.service.del"):
             exec "dict_service[\"%s\"]=__settings__.getSetting(\"%s\")" % (key,key)
-        for key in ("sys.upgrade","remote.filter"):
+        for key in ("sys.upgrade","remote.filter","sys.notification"):
             exec "dict_switches[\"%s\"]=__settings__.getSetting(\"%s\")" % (key,key)
         if DISTRO == "Raspbmc":
             for key in ("sys.xbmc.res","sys.xbmc.ae","sys.xbmc.shut","remote.gpio.enable","remote.gpio.profile", "sys.xbmc.headers"):

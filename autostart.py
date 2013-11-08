@@ -154,7 +154,7 @@ if ( __name__ == "__main__" ):
             from select_language import *
             select_language(__cwd__)
 
-        if switch_settings['sys.upgrade'] == '0' or switch_settings['sys.upgrade'] == '2':
+        if switch_settings['sys.notification'] == 'true':
             from update_notify import RaspBMC_Update_Notification_Service
             srv = RaspBMC_Update_Notification_Service()
             del srv

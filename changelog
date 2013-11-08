@@ -1,10 +1,46 @@
-CHANGELOG:
-Changed label in Settings from "Keep RaspBMC Updated" to "Update RaspBMC on Reboot"
-Options in Settings now "Always (Notify)"(default), "Never", or "Notify Only"
-'Always (Notify)" is auto-update on reboot (with notification, as I figured no-one would want to be surprised by the update)
-'Never' is never auto-update
-'Notify Only' is never auto-update, but let me know when a new version is available
-Added update_notify.py to resources/lib, containing the update notification service class
-Added service to autostart.py (autostart will now continue to run instead of dying)
-changed switches.py to launch or kill service without needing restart
-bumped version number
+
+resources/lib/switches.py
+#70 - insert
+    if "sys.notification" in sys_dict:
+        if sys_dict["sys.notification"] == "true":
+            import xbmcaddon
+            import os
+            xbmc.executescript(os.path.join(xbmcaddon.Addon("script.raspbmc.settings").getAddonInfo('path'),'resources','lib','update_notify.py'))
+        else:
+            import xbmcgui
+            window = xbmcgui.window(10000)
+            window.setProperty('RUNS_stopnow','true')
+
+resources/lib/sys_config.py
+#38 - replace
+
+    OLD - for key in ("sys.upgrade","remote.filter"):
+    NEW - for key in ("sys.upgrade","remote.filter","sys.notification"):
+
+autostart.py
+#157 - insert
+
+        if switch_settings['sys.notification'] == 'true':
+            from update_notify import RaspBMC_Update_Notification_Service
+            srv = RaspBMC_Update_Notification_Service()
+            del srv
+
+resources/settings.xml 
+#57 - insert
+     <setting id="sys.notification" type="bool" default="true" label="30209"/>
+     <setting type="sep" />
+#94 - insert
+    <setting id="Update_Available" type="bool" default="false" visible="false"/>
+
+resources/language/English/strings.xml 
+#43 - replace
+    OLD - <string id="30203">Enable Auto-Update on Reboot</string>
+    NEW - <string id="30203">Enable Auto-Update on Reboot</string>
+
+#49 - insert
+    <string id="30209">Notify me when update is available</string>
+
+added files:
+    https://www.dropbox.com/sh/k69maxjmjqngff8/wt70UjE3Kd
+    resources/lib/update_notify.py
+    resources/media/RaspBMC_UA.png
