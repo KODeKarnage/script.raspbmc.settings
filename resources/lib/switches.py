@@ -36,6 +36,7 @@ def clear_resolution_settings(XML):
 
 
 def set_switch(sys_dict,DISTRO):
+    import os
     AUTO_UPGRADE_FILE= os.path.join(os.getenv("HOME"), ".noupgrades")
     UPGRADE_PATH = os.path.join(os.getenv("HOME"),".upgrade")
     GUI_SETTINGS = os.path.join(os.getenv("HOME"),".xbmc","userdata","guisettings.xml")
@@ -70,12 +71,16 @@ def set_switch(sys_dict,DISTRO):
     if "sys.notification" in sys_dict:
         if sys_dict["sys.notification"] == "true":
             import xbmcaddon
-            import os
             xbmc.executescript(os.path.join(xbmcaddon.Addon("script.raspbmc.settings").getAddonInfo('path'),'resources','lib','update_notify.py'))
         else:
             import xbmcgui
-            window = xbmcgui.window(10000)
+            window = xbmcgui.Window(10000)
             window.setProperty('RUNS_stopnow','true')
+
+    if "sys.upgradenow" in sys_dict:
+        if sys_dict["sys.upgradenow"] == "true":
+            if os.path.isfile(AUTO_UPGRADE_FILE):
+                os.remove(AUTO_UPGRADE_FILE)
 
 
     if "remote.filter" in sys_dict:

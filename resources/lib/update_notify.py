@@ -43,7 +43,7 @@ class RaspBMC_Update_Notification_Service():
             self.window.setProperty('RUNS_Running','true')
             self.window.setProperty('RUNS_stopnow','false')
 
-            xbmc.sleep(30000)
+            xbmc.sleep(10000)
 
             self.__script_id__  = "script.raspbmc.settings"
             self.__addon__      = xbmcaddon.Addon(id=self.__script_id__)
@@ -72,6 +72,12 @@ class RaspBMC_Update_Notification_Service():
 
     def _daemon(self):
         while not xbmc.abortRequested:
+
+            #checks if the service has been asked to stop
+            _stopservice = self.window.getProperty('RUNS_stopnow')
+            
+            if _stopservice == 'true':
+                break
             
             self.current_time = datetime.datetime.now()
 
@@ -87,11 +93,6 @@ class RaspBMC_Update_Notification_Service():
 
                 self.log('available',available)
                 self.log('notified',notified)
-                
-                #checks if the service has been asked to stop
-                _stopservice = self.window.getProperty('RUNS_stopnow')
-                if _stopservice == 'true':
-                    break
 
                 if available == 'true' and notified == 'false':
                     #posts notification if update is available and notification is not currently displayed

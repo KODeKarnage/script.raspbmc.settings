@@ -117,19 +117,19 @@ if ( __name__ == "__main__" ):
         except:
             pass
 
-	if __settings__.getSetting("firewall.disable") == "true":
+        if __settings__.getSetting("firewall.disable") == "true":
             os.system('sudo iptables -F;sudo iptables -X;sudo iptables -t nat -F;sudo iptables -t nat -X;sudo iptables -t mangle -F;sudo iptables -t mangle -X;sudo iptables -P INPUT ACCEPT;sudo iptables -P FORWARD ACCEPT;sudo iptables -P OUTPUT ACCEPT')
 
         if __settings__.getSetting("remote.gpio.enable") == "true" and DISTRO == "Raspbmc":
             os.system('test x"`grep lirc_rpi /proc/modules`" != "x" || sudo modprobe lirc_rpi')
-	
-	if DISTRO == "Raspbmc" and os.path.isfile("/home/pi/.bootstatus") and check_service_running("wd") == "true" and not os.path.isfile("/home/pi/.nowarning"):
-	    import xbmcgui
-	    dialog = xbmcgui.Dialog()
-	    dialog.ok("Raspbmc did not shut down properly", "Raspbmc should always be shut down via the\npower icon in the lower left corner")
+
+        if DISTRO == "Raspbmc" and os.path.isfile("/home/pi/.bootstatus") and check_service_running("wd") == "true" and not os.path.isfile("/home/pi/.nowarning"):
+            import xbmcgui
+            dialog = xbmcgui.Dialog()
+            dialog.ok("Raspbmc did not shut down properly", "Raspbmc should always be shut down via the\npower icon in the lower left corner")
             dialog.ok("Raspbmc did not shut down properly", "If your device keeps freezing or rebooting\nvisit www.raspbmc.com/power for advice")
         if DISTRO == "Raspbmc":
-	    os.system('sudo /sbin/initctl emit --no-wait start-wd')
+            os.system('sudo /sbin/initctl emit --no-wait start-wd')
 
         if __firstrun__ == "false" and os.path.isfile("/boot/config.txt") and  DISTRO == "Raspbmc":
             #xbmc.log("system settings from addon: " + str(system_settings))
@@ -153,6 +153,13 @@ if ( __name__ == "__main__" ):
         if __firstrun__ == "true":
             from select_language import *
             select_language(__cwd__)
+
+        if switch_settings['sys.upgradenow'] == 'true':
+            AUTO_UPGRADE_FILE= os.path.join(os.getenv("HOME"), ".noupgrades")
+            if not os.path.isfile(AUTO_UPGRADE_FILE):
+                f=open(AUTO_UPGRADE_FILE,'w')
+                f.close()
+            __settings__.setSetting('sys.upgradenow','false')
 
         if switch_settings['sys.notification'] == 'true':
             from update_notify import RaspBMC_Update_Notification_Service

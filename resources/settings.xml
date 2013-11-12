@@ -54,9 +54,9 @@
      
      <setting label="31101" type="lsep" />
      <setting id="sys.upgrade" type="bool" default="true" label="30203"/>
-     <setting id="sys.notification" type="bool" default="true" label="30209" />
-
-    <setting type="sep" />
+     <setting id="sys.upgradenow" type="bool" default="false" label="30210"/>
+     <setting id="sys.notification" type="bool" default="true" label="30209"/>
+     <setting type="sep" />
      <setting id="sys.xbmc.res" type="bool" default="false" label="30204"/>
      <!--<setting id="sys.xbmc.ae" type="bool" default="false" label="30205"/>-->
      <setting id="sys.xbmc.headers" type="bool" default="false" label="30207"/>

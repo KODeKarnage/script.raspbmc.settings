@@ -35,7 +35,7 @@ def load_settings(__settings__,DISTRO):
             exec "dict_nm[\"%s\"]=__settings__.getSetting(\"%s\")" % (key,key)
         for key in ("sys.service.ftp","sys.service.ssh","sys.service.samba","sys.service.remote","sys.service.cron","sys.service.tvh", "sys.service.boblight", "sys.service.surveil", "sys.service.vnc", "sys.service.sab", "sys.service.del"):
             exec "dict_service[\"%s\"]=__settings__.getSetting(\"%s\")" % (key,key)
-        for key in ("sys.upgrade","remote.filter","sys.notification"):
+        for key in ("sys.upgrade","remote.filter","sys.notification", "sys.upgradenow"):
             exec "dict_switches[\"%s\"]=__settings__.getSetting(\"%s\")" % (key,key)
         if DISTRO == "Raspbmc":
             for key in ("sys.xbmc.res","sys.xbmc.ae","sys.xbmc.shut","remote.gpio.enable","remote.gpio.profile", "sys.xbmc.headers"):
@@ -216,20 +216,20 @@ def enable_disable_service(service,state):
     import os
     import xbmc
     if state:
-	if service == "samba" or service == "ssh" or service == "ftp":
-		os.system("sudo /scripts/xinet.sh 'enable' '" + service + "'")
-		os.system("sudo /sbin/initctl stop xinetd")
-                os.system("sudo /sbin/initctl start xinetd")
-	else:
-        	os.system("sudo /sbin/initctl emit --no-wait enable-"+service)
+        if service == "samba" or service == "ssh" or service == "ftp":
+            os.system("sudo /scripts/xinet.sh 'enable' '" + service + "'")
+            os.system("sudo /sbin/initctl stop xinetd")
+            os.system("sudo /sbin/initctl start xinetd")
+        else:
+            os.system("sudo /sbin/initctl emit --no-wait enable-"+service)
         xbmc.log("enable service: " +service)
     if not state:
-	if service == "samba" or service == "ssh" or service == "ftp":
-		os.system("sudo /scripts/xinet.sh 'disable' '" + service + "'")
-		os.system("sudo /sbin/initctl stop xinetd") 
-                os.system("sudo /sbin/initctl start xinetd")
-	else:
-		os.system("sudo /sbin/initctl emit --no-wait disable-"+service)
+        if service == "samba" or service == "ssh" or service == "ftp":
+            os.system("sudo /scripts/xinet.sh 'disable' '" + service + "'")
+            os.system("sudo /sbin/initctl stop xinetd") 
+            os.system("sudo /sbin/initctl start xinetd")
+        else:
+            os.system("sudo /sbin/initctl emit --no-wait disable-"+service)
         xbmc.log("disable service: " +service)
 
 

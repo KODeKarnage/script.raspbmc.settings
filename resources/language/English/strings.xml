@@ -47,6 +47,7 @@
     <string id="30207">Install and update kernel headers</string>
     <string id="30208">MAC address for Wake on LAN</string>
     <string id="30209">Notify me when update is available</string>
+    <string id="30210">Update on next reboot (resets on reboot)</string>
     <string id="30300">MPEG2 codec license</string>
     <string id="30301">VC1 codec key</string>
     <string id="30302">DTS codec key</string>

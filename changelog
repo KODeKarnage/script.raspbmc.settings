@@ -44,3 +44,35 @@ added files:
     https://www.dropbox.com/sh/k69maxjmjqngff8/wt70UjE3Kd
     resources/lib/update_notify.py
     resources/media/RaspBMC_UA.png
+
+
+
+
+strings.xml
+#50 - insert
+<string id="30210">Update on next reboot (resets on reboot)</string>
+
+sys_config.py
+#38 - change
+        for key in ("sys.upgrade","remote.filter","sys.notification", "sys.upgradenow"):
+
+switches.py
+#80 - insert
+
+    if "sys.upgradenow" in sys_dict:
+        if sys_dict["sys.upgradenow"] == "true":
+            if os.path.isfile(AUTO_UPGRADE_FILE):
+                os.remove(AUTO_UPGRADE_FILE)
+
+settings.xml
+#57 - insert
+<setting id="sys.upgradenow" type="bool" default="false" label="30210" enable="eq(-1,1)"/>
+
+autostart.py
+#157 - insert
+        if switch_settings['sys.upgradenow'] == 'true':
+            AUTO_UPGRADE_FILE= os.path.join(os.getenv("HOME"), ".noupgrades")
+            if not os.path.isfile(AUTO_UPGRADE_FILE):
+                f=open(AUTO_UPGRADE_FILE,'w')
+                f.close()
+            __settings__.setSetting('sys.upgradenow','false')
